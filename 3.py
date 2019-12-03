@@ -16,6 +16,10 @@ class Point:
 	
 	def __ne__(self, other):
 		return not self.__eq__(other)
+	
+	def manhattanDistance(self, point):
+		"""Returns the Manhattan distance to another point."""
+		return abs(self.x - point.x) + abs(self.y - point.y)
 
 class WireSegment:
 	def __init__(self, starting_point, direction, distance):
@@ -83,6 +87,12 @@ class WireSegment:
 			return set()
 		else:
 			return self.getPoints().intersection(segment.getPoints())
+	
+	def stepsToReachPoint(self, point):
+		"""Returns the number of steps along the WireSegment it takes to reach the given Point."""
+		#assert point in self.getPoints()
+		return self.starting_point.manhattanDistance(point)
+		
 
 class Wire:
 	def __init__(self, segments):
@@ -109,10 +119,19 @@ class Wire:
 	def getIntersections(self, wire):
 		"""Checks against another Wire or WireSegment and returns the set of all intersections."""
 		return set.intersection(self.getPoints(), wire.getPoints())
+	
+	def stepsToReachPoint(self, point):
+		"""Returns the number of steps along the Wire it takes to reach the given Point."""
+		#assert point in self.getPoints()
+		steps = 0
+		for segment in self.segments:
+			if point in segment.getPoints():
+				steps += segment.stepsToReachPoint(point)
+				break
+			else:
+				steps += segment.distance
+		return steps
 
-def manhattanDistanceFromCentralPort(point):
-	"""Returns the Manhattan Distance between a given Point and the Central Port at (0,0)."""
-	return abs(point.x) + abs(point.y)
 
 if __name__ == "__main__":
 	with open("3.input", "r") as file:
@@ -137,11 +156,20 @@ if __name__ == "__main__":
 			
 			wires.append(Wire(segments))
 
+	central_port = Point(0,0)
+
 	wire_a = wires[0]
 	wire_b = wires[1]
 
 	intersections = Wire.getIntersections(wire_a, wire_b)
-	intersections.remove(Point(0,0))
+	intersections.remove(central_port)
 	
-	closestDistance = min([manhattanDistanceFromCentralPort(point) for point in intersections])
+	# Part 1
+
+	closestDistance = min([central_port.manhattanDistance(point) for point in intersections])
 	print(closestDistance)
+
+	# Part 2
+
+	fewestCombinedSteps = min([wire_a.stepsToReachPoint(point) + wire_b.stepsToReachPoint(point) for point in intersections])
+	print(fewestCombinedSteps)

@@ -90,7 +90,7 @@ class WireSegment:
 	
 	def stepsToReachPoint(self, point):
 		"""Returns the number of steps along the WireSegment it takes to reach the given Point."""
-		#assert point in self.getPoints()
+		assert point in self.getPoints()
 		return self.starting_point.manhattanDistance(point)
 
 class Wire:
@@ -121,15 +121,14 @@ class Wire:
 	
 	def stepsToReachPoint(self, point):
 		"""Returns the number of steps along the Wire it takes to reach the given Point."""
-		#assert point in self.getPoints()
 		steps = 0
 		for segment in self.segments:
 			if point in segment.getPoints():
 				steps += segment.stepsToReachPoint(point)
-				break
+				return steps
 			else:
 				steps += segment.distance
-		return steps
+		raise ValueError("Given point is not part of Wire.")
 
 if __name__ == "__main__":
 	with open("3.input", "r") as file:
@@ -160,13 +159,11 @@ if __name__ == "__main__":
 
 	intersections = Wire.getIntersections(wire_a, wire_b)
 	intersections.remove(central_port)
-	
-	# Part 1
 
+	# Part 1
 	closestDistance = min([central_port.manhattanDistance(point) for point in intersections])
-	print(closestDistance)
+	print("PART 1 | central port <--> closest wire intersection:", closestDistance)
 
 	# Part 2
-
 	fewestCombinedSteps = min([wire_a.stepsToReachPoint(point) + wire_b.stepsToReachPoint(point) for point in intersections])
-	print(fewestCombinedSteps)
+	print("PART 2 | minimum combined step distance:", fewestCombinedSteps)

@@ -92,7 +92,6 @@ class WireSegment:
 		"""Returns the number of steps along the WireSegment it takes to reach the given Point."""
 		#assert point in self.getPoints()
 		return self.starting_point.manhattanDistance(point)
-		
 
 class Wire:
 	def __init__(self, segments):
@@ -132,26 +131,24 @@ class Wire:
 				steps += segment.distance
 		return steps
 
-
 if __name__ == "__main__":
 	with open("3.input", "r") as file:
 
 		wires = []
 
 		for line in file:
-			wire = line.strip().split(",")
-			wire = [(x[0], x[1:]) for x in wire]
+			wire_data = line.strip().split(",")
+			wire_data = [(x[0], x[1:]) for x in wire_data]
 
 			cursor = Point(0,0)
 			segments = []
 
-			for part in wire:
-				direction = part[0]
-				distance = int(part[1])
+			for segment_data in wire_data:
+				direction = segment_data[0]
+				distance = int(segment_data[1])
 
 				segment = WireSegment(cursor, direction, distance)
 				segments.append(segment)
-
 				cursor = segment.getEndPoint()
 			
 			wires.append(Wire(segments))

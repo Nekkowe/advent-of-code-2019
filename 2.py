@@ -23,7 +23,7 @@ def parseCommaSeparatedIntegers(string):
 	return list(map(int, string.split(',')))
 
 if __name__ == "__main__":
-	with open("2.input", "r") as file:
+	with open("input/2.input", "r") as file:
 		intcode = parseCommaSeparatedIntegers(file.read())
 
 	# Part 1

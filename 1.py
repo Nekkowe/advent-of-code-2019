@@ -24,7 +24,7 @@ if __name__ == "__main__":
 	total_part_1 = 0
 	total_part_2 = 0
 
-	with open("1.input", "r") as file:
+	with open("input/1.input", "r") as file:
 		for line in file:
 			mass = int(line)
 			total_part_1 += getFuelCost(mass)

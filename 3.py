@@ -131,7 +131,7 @@ class Wire:
 		raise ValueError("Given point is not part of Wire.")
 
 if __name__ == "__main__":
-	with open("3.input", "r") as file:
+	with open("input/3.input", "r") as file:
 
 		wires = []
 

@@ -3,15 +3,11 @@ def isPasswordValid(password):
 	last_digit = "0"
 
 	for i, digit in enumerate(str(password)):
-		if i == 0:
-			last_digit = digit
-			continue
-		
-		if digit < last_digit:
-			return False
-		elif digit == last_digit:
-			has_repeat_digit = True
-		
+		if i > 0:		
+			if digit < last_digit:
+				return False
+			elif digit == last_digit:
+				has_repeat_digit = True
 		last_digit = digit
 
 	return has_repeat_digit
@@ -22,17 +18,13 @@ def getRunLengths(password):
 	last_digit = None
 
 	for i, digit in enumerate(str(password)):
-		
-		if i == 0:
-			last_digit = digit
-			continue
-
-		if digit == last_digit:
-			run_length += 1
-		else:
-			runs.append(run_length)
-			run_length = 1
-			last_digit = digit
+		if i > 0:
+			if digit == last_digit:
+				run_length += 1
+			else:
+				runs.append(run_length)
+				run_length = 1
+		last_digit = digit
 	
 	runs.append(run_length)
 	return runs

@@ -1,7 +1,7 @@
 def process(intcode, input_queue=[], noun=None, verb=None):
 	"""
 	Processes an Intcode. 
-	Returns the resulting output integer in position 1,
+	Returns the final state of the Intcode at halt time,
 	and a list of all resulting outputs (opcode 4).
 	
 	== input parameters ==
@@ -92,7 +92,7 @@ def process(intcode, input_queue=[], noun=None, verb=None):
 		if opcode not in [5,6]:
 			i += chunk_size
 		
-	return memory[0], output_queue
+	return memory, output_queue
 
 def getParameterModes(chunk):
 	"""Returns the list of parameter modes contained in the chunk."""

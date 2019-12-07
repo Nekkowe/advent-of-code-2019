@@ -54,4 +54,4 @@ if __name__ == "__main__":
 		weighted_connections.sort()
 		path.append(weighted_connections[0][1])
 
-	print("Bonus! | exact path:",path)
+	print("Bonus! | exact path:", path)

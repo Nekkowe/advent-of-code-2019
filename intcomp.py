@@ -1,9 +1,30 @@
-def process(intcode, noun=None, verb=None):
+def process(intcode, input_queue=[], noun=None, verb=None):
 	"""
-	Processes an Intcode and returns the resulting output integer.
-	Given parameters substituted for positions 1 (noun) and 2 (verb).
+	Processes an Intcode. 
+	Returns the resulting output integer in position 1,
+	and a list of all resulting outputs (opcode 4).
+	
+	== input parameters ==
+
+	intcode:		The Intcode to be processed
+	noun:			Substituted for position 1
+	verb:			Substituted for position 2
+	input_queue:	Input opcode (3) reads from queue before asking user
+
+	== opcode reference ==
+
+	1: a + b, store at c
+	2: a * b, store at c
+	3: take input, store at a
+	4: output a
+	5: if a nonzero: jump to b
+	6: if a zero: jump to b
+	7: write 1 to c if (a < b), else write 0
+	8: write 1 to c if (a == b), else write 0 
+	99: halt
 	"""
 	memory = intcode[:]
+	output_queue = []
 
 	memory[1] = noun if noun is not None else memory[1]
 	memory[2] = verb if verb is not None else memory[2]
@@ -27,33 +48,51 @@ def process(intcode, noun=None, verb=None):
 		if opcode is 1:
 			write_position = chunk[3]
 			memory[write_position] = operands[0] + operands[1]
+
 		elif opcode is 2:
 			write_position = chunk[3]
 			memory[write_position] = operands[0] * operands[1]
+
 		elif opcode is 3:
 			write_position = chunk[1]
-			memory[write_position] = int(input("Input: "))
+
+			if len(input_queue):
+				write_value = input_queue.pop(0)
+				memory[write_position] = write_value
+				print("input  @",i,"\t|",write_value)
+			else:
+				write_value = int(input("input  @ " + str(i) + "\t| "))
+				memory[write_position] = write_value
+
 		elif opcode is 4:
-			print("Position",i,"|",operands[0])
+			output_value = operands[0]
+			output_queue.append(output_value)
+			print("output @",i,"\t|",output_value)
+
 		elif opcode is 5:
 			i = operands[1] if operands[0] else (i + chunk_size)
+
 		elif opcode is 6:
 			i = (i + chunk_size) if operands[0] else operands[1]
+
 		elif opcode is 7:
 			write_position = chunk[3]
 			memory[write_position] = 1 if operands[0] < operands[1] else 0
+
 		elif opcode is 8:
 			write_position = chunk[3]
 			memory[write_position] = 1 if operands[0] == operands[1] else 0
+
 		elif opcode is 99:
 			break
+		
 		else:
 			raise ValueError("opcode not recognized: " + str(opcode))
 		
 		if opcode not in [5,6]:
 			i += chunk_size
 		
-	return memory[0]
+	return memory[0], output_queue
 
 def getParameterModes(chunk):
 	"""Returns the list of parameter modes contained in the chunk."""
@@ -89,4 +128,4 @@ if __name__ == "__main__":
 		sep="\n",
 	)
 
-	process(intcode)
+	print(process(intcode, []))

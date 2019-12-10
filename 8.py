@@ -1,4 +1,5 @@
 import numpy as np
+from matplotlib import pyplot as plt
 
 def countDigits(layer):
 	digits = {}
@@ -39,4 +40,17 @@ if __name__ == "__main__":
 	part_1_result = part_1_digits[1] * part_1_digits[2]
 	print("Part 1 | result of multiplying # of digits:", part_1_result)
 	
+	# Part 2
 
+	image = np.ones((height, width)) * 2
+	mask = np.ones((height, width))
+
+	for layer in layers:
+		image += mask * (np.reshape(layer, (height, width)) - 2)
+		mask = (image == 2) * 1
+		
+		if not mask.any():
+			break
+	
+	plt.imshow(image)
+	plt.show()
